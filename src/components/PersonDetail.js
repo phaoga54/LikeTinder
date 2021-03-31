@@ -1,64 +1,83 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { } from 'react';
+import React, { useState } from 'react';
+import { useEffect } from 'react';
 import {
     View,
     Text,
     Image,
     StyleSheet,
     TouchableOpacity,
-    Dimensions
+    Dimensions, Animated
 } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 const { height, width } = Dimensions.get("window");
 const CONTAINER_HEIGHT = width * 0.8
 const COVER_HEIGHT = CONTAINER_HEIGHT * 0.3
-const IMAGE_SIZE = COVER_HEIGHT + 10
-const PersonDetail = ({ uri }) => {
+const IMAGE_SIZE = CONTAINER_HEIGHT / 3 + 10
+const ICON_SIZE = 35
+const ICON_MARGIN = 7
+
+const ICONS = ['user', 'calendar', 'map', 'phone', 'lock']
+const FIXED_TEXT = ['My name is', 'Joined at', 'My address is', 'My phone number is', 'Locked Infomation']
+const PersonDetail = ({
+    uri, email, dob, phone, userLocation, registered,
+    userName, picture
+}) => {
+    const [left, setLeft] = useState(new Animated.Value(2 * (ICON_SIZE + ICON_MARGIN)))
+    const [selectedLabel, setSelectedLabel] = useState('map')
+    const [selectedIndex, setSelectedIndex] = useState(2)
+    const [arrData, setArrData] = useState([])
+    const selectIcon = (name, index) => {
+        moveTopLine(index)
+        setSelectedLabel(name)
+        setSelectedIndex(index)
+    }
+    const moveTopLine = (index) => {
+        let destination = index * (ICON_SIZE + ICON_MARGIN)
+        let time = Math.abs(index - selectedIndex) * 200
+        Animated.timing(left, {
+            toValue: destination,
+            duration: time,
+            useNativeDriver: true
+        }).start()
+    }
+    useEffect(() => {
+        const { first, last, title } = userName || ''
+        const { street } = userLocation || ''
+        let arr = [`${title} ${first} ${last}`, registered, street, phone, 'Private Infomation']
+        setArrData(arr)
+    }, [email])
     return (
         <View
-            style={[{
-                borderWidth: 1, height: 400, borderRadius: 5,
-                width: CONTAINER_HEIGHT, alignItems: 'center',
-                overflow: 'hidden'
-            }]}>
-            <View style={{
-                width: '100%',
-                height: COVER_HEIGHT,
-                borderBottomWidth: 1, borderColor: 'gray'
-            }} />
-            <View style={{
-                width: '100%', height: '100%',
-                marginTop: IMAGE_SIZE * 0.5 + 30, alignItems: 'center'
-            }}>
-                <Text>My Address is </Text>
-                <Text>Address </Text>
-                <View style={{
-                    flexDirection: 'row', width: 35 * 5 + 4 * 7,
-                    justifyContent: 'space-between',
-                    paddingTop: 50
-                }}>
-                    <View style={{
-                        width: 35, height: 2,
-                        backgroundColor: 'green', position: 'absolute', top: 45, left: 0
-                    }} />
-                    <TouchableOpacity style={{ width: 35, height: 35, backgroundColor: 'red' }} />
-                    <TouchableOpacity style={{ width: 35, height: 35, backgroundColor: 'blue' }} />
-                    <TouchableOpacity style={{ width: 35, height: 35, backgroundColor: 'green' }} />
-                    <TouchableOpacity style={{ width: 35, height: 35, backgroundColor: 'yellow' }} />
-                    <TouchableOpacity style={{ width: 35, height: 35, backgroundColor: 'orange' }} />
+            style={styles.container}>
+            <View style={styles.coverContainer} />
+            <View style={styles.infoContainer}>
+                <Text style={{ fontSize: 18, color: '#9b9b9b' }}>{FIXED_TEXT[selectedIndex]}</Text>
+                <Text style={{ fontSize: 20, fontWeight: '700' }}>{arrData[selectedIndex]}</Text>
+                <View style={styles.infomation}>
+                    <Animated.View style={[styles.topLine, { transform: [{ translateX: left }] }]} />
+                    {ICONS.map((name, index) => (
+                        <TouchableOpacity style={styles.iconContainer}
+                            onPress={() => { selectIcon(name, index) }}
+                            key={name}
+                        >
+                            <Icon name={name} size={30} color={selectedLabel == name ? "#92b959" : '#dadada'} />
+                        </TouchableOpacity>
+                    ))}
                 </View>
             </View>
             <View style={{
                 width: IMAGE_SIZE, height: IMAGE_SIZE,
-                position: 'absolute', top: COVER_HEIGHT / 2,
+                position: 'absolute', top: COVER_HEIGHT * 1 / 3,
                 justifyContent: 'center', alignItems: 'center', backgroundColor: 'white',
-                borderColor: 'gray', borderWidth: 1, borderRadius: 100
+                borderColor: '#cdcdcd', borderWidth: 1, borderRadius: 100
             }}>
 
                 <Image style={{
                     width: IMAGE_SIZE - 10, height: IMAGE_SIZE - 10,
                     borderRadius: 50,
                 }}
-                    source={{ uri }}
+                    source={{ uri: picture }}
                     resizeMode={'contain'}
                 />
             </View>
@@ -67,42 +86,32 @@ const PersonDetail = ({ uri }) => {
 };
 export default PersonDetail;
 const styles = StyleSheet.create({
-    iconTab: {
-        height: 30,
-        width: 30,
+    topLine: {
+        width: 35, height: 2,
+        backgroundColor: '#92b959', position: 'absolute', top: 45, left: 0
     },
-    titleTab: {
-        fontSize: 10,
-        marginTop: 5,
+    infomation: {
+        flexDirection: 'row', width: 35 * 5 + 4 * ICON_MARGIN,
+        justifyContent: 'space-between',
+        paddingTop: 50
     },
-    viewTab: {
-        flex: 1,
-        alignItems: 'center',
-        backgroundColor: '#FFFFFF',
-        paddingVertical: 8,
+    infoContainer: {
+        width: '100%', height: '100%',
+        marginTop: IMAGE_SIZE * 0.5 + 30, alignItems: 'center',
     },
-    viewbt: {
-        shadowOffset: {
-            width: 0,
-            height: 7,
-        },
-        elevation: 14,
-        shadowRadius: 9.11,
-        shadowOpacity: 0.41,
-        shadowColor: '#000',
-        flexDirection: 'row',
-        backgroundColor: 'white',
+    coverContainer: {
+        width: '100%',
+        height: COVER_HEIGHT,
+        borderBottomWidth: 1, borderColor: '#cdcdcd',
+        backgroundColor: "#f9f9f9"
     },
-    viewBageNav: {
-        position: 'absolute',
-        backgroundColor: '#ED5F7D',
-        width: 18,
-        height: 18,
-        borderRadius: 10,
-        right: 20,
-        top: 5,
-        zIndex: 1,
-        alignItems: 'center',
-        justifyContent: 'center'
+    container: {
+        height: 400, borderRadius: 5,
+        width: CONTAINER_HEIGHT, alignItems: 'center',
+        overflow: 'hidden',
+        backgroundColor: 'white'
+    },
+    iconContainer: {
+        width: ICON_SIZE, height: ICON_SIZE, justifyContent: 'center', alignItems: 'center'
     }
 });
