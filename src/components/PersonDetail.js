@@ -20,7 +20,7 @@ const ICON_MARGIN = 7
 const ICONS = ['user', 'calendar', 'map', 'phone', 'lock']
 const FIXED_TEXT = ['My name is', 'Joined at', 'My address is', 'My phone number is', 'Locked Infomation']
 const PersonDetail = ({
-    uri, email, dob, phone, userLocation, registered,
+    email, phone, userLocation, registered,
     userName, picture
 }) => {
     const [left, setLeft] = useState(new Animated.Value(2 * (ICON_SIZE + ICON_MARGIN)))

@@ -15,16 +15,6 @@ const TabNavigator = () => {
             tabBar={(props) => <CustomTab {...props} />}
             initialRouteName={'MatchedFriend'}>
             <Tab.Screen
-                name={'MatchedScreen'}
-                options={{
-                    iconActive: <View style={{ width: 30, borderRadius: 15, height: 30, borderColor: 'red' }} />,
-                    iconInActive: <View style={{ width: 30, borderRadius: 15, height: 30, borderColor: 'gray' }} />,
-                    title: 'MatchedFriend',
-                    tabBarVisible: false
-                }}
-                component={MatchedScreen}
-            />
-            <Tab.Screen
                 name={'MatchedFriend'}
                 options={{
                     iconActive: <View style={{ width: 30, height: 30, borderColor: 'red' }} />,
@@ -33,6 +23,16 @@ const TabNavigator = () => {
                     tabBarVisible: false
                 }}
                 component={MatchFriendScreen}
+            />
+            <Tab.Screen
+                name={'MatchedScreen'}
+                options={{
+                    iconActive: <View style={{ width: 30, borderRadius: 15, height: 30, borderColor: 'red' }} />,
+                    iconInActive: <View style={{ width: 30, borderRadius: 15, height: 30, borderColor: 'gray' }} />,
+                    title: 'MatchedFriend',
+                    tabBarVisible: false
+                }}
+                component={MatchedScreen}
             />
         </Tab.Navigator>
     )
