@@ -28,14 +28,8 @@ steps:
     clean: true
     packageApp: true
     runNugetRestore: false
-- task: CmdLine@2
-  inputs:
-    script: |
-      echo Write your commands here
-      echo Hello world
-      yarn
-      cd android
-      gradlew clean; graldew build
-
+- script: |
+    npm install
+    echo Hello CICD with YAML
   displayName: 'CICD with YAML'
 
