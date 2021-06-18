@@ -1,8 +1,8 @@
 pool:
-steps:
-- task: Yarn@3
-  inputs:
+  name: Azure Pipelines
+  demands: yarn
 
+steps:
 - task: CocoaPods@0
   displayName: 'pod install'
   inputs:
@@ -17,6 +17,7 @@ steps:
    echo Hello world
    
   displayName: 'Command Line Script'
+
 
 - task: InstallAppleProvisioningProfile@1
   displayName: 'Install an Apple provisioning profile'
