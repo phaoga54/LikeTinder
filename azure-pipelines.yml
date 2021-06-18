@@ -1,35 +1,38 @@
-# Node.js with React
-# Build a Node.js project that uses React.
-# Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
-
-trigger:
-- master
-
 pool:
-  vmImage: ubuntu-latest
+  name: Azure Pipelines
+  demands: yarn
 
 steps:
-- task: NodeTool@0
+- task: CocoaPods@0
+  displayName: 'pod install'
   inputs:
-    versionSpec: '10.x'
-  displayName: 'Install Node.js'
-- task: Gradle@2
-  inputs:
-    gradleWrapperFile: 'gradlew'
-    tasks: 'clean build'
-    publishJUnitResults: false
-    javaHomeOption: 'JDKVersion'
-    sonarQubeRunAnalysis: false
-- task: XamariniOS@2
-  inputs:
-    solutionFile: '**/*.sln'
-    configuration: 'Debug'
-    clean: true
-    packageApp: true
-    runNugetRestore: false
-- script: |
-    npm install
-    echo Hello CICD with YAML
-  displayName: 'CICD with YAML'
+    workingDirectory: ./ios
 
+- script: |
+   echo Write your commands here
+   ls
+   echo =================
+   cd ios
+   pwd
+   echo Hello world
+   
+  displayName: 'Command Line Script'
+
+- task: geeklearningio.gl-vsts-tasks-yarn.yarn-task.Yarn@3
+  displayName: 'Yarn '
+
+- task: InstallAppleProvisioningProfile@1
+  displayName: 'Install an Apple provisioning profile'
+  inputs:
+    provProfileSecureFile: '0b76def2-6721-48a5-ad27-416007be9354'
+  enabled: false
+
+- task: InstallAppleCertificate@2
+  displayName: 'Install an Apple certificate'
+  inputs:
+    certSecureFile: '0b76def2-6721-48a5-ad27-416007be9354'
+  enabled: false
+
+- task: CocoaPods@0
+  displayName: 'cd ios; pod install;'
+  enabled: false
