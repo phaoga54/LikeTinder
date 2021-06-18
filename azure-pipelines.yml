@@ -1,12 +1,11 @@
 pool:
   name: Azure Pipelines
-  demands: yarn
 
 steps:
-- task: CocoaPods@0
-  displayName: 'pod install'
-  inputs:
-    workingDirectory: ./ios
+# - task: CocoaPods@0
+#   displayName: 'pod install'
+#   inputs:
+#     workingDirectory: ./ios
 
 - script: |
    echo Write your commands here
@@ -19,18 +18,3 @@ steps:
   displayName: 'Command Line Script'
 
 
-- task: InstallAppleProvisioningProfile@1
-  displayName: 'Install an Apple provisioning profile'
-  inputs:
-    provProfileSecureFile: '0b76def2-6721-48a5-ad27-416007be9354'
-  enabled: false
-
-- task: InstallAppleCertificate@2
-  displayName: 'Install an Apple certificate'
-  inputs:
-    certSecureFile: '0b76def2-6721-48a5-ad27-416007be9354'
-  enabled: false
-
-- task: CocoaPods@0
-  displayName: 'cd ios; pod install;'
-  enabled: false
